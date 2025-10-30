@@ -1,0 +1,153 @@
+[gd_scene load_steps=15 format=3 uid="uid://cfx5lvq88fx51"]
+
+[ext_resource type="Script" path="res://title_screen.gd" id="1_vkuvb"]
+[ext_resource type="VideoStream" path="res://Start screen.ogv" id="2_ivxa3"]
+[ext_resource type="FontFile" uid="uid://bcqp6l8lhkukb" path="res://MainMenu/InfoFontEnglish.ttf" id="3_116nx"]
+[ext_resource type="PackedScene" uid="uid://dj3nen1ghgff4" path="res://fade_transition.tscn" id="3_tn51j"]
+[ext_resource type="Shader" path="res://title_screen.gdshader" id="4_mli4t"]
+[ext_resource type="Texture2D" uid="uid://csmjd1i55a5hq" path="res://PNGs/ControlScheme.png" id="5_rog2a"]
+[ext_resource type="AudioStream" uid="uid://u1fpyr7vkl1d" path="res://Sounds/Click2.mp3" id="7_oalsb"]
+[ext_resource type="AudioStream" uid="uid://ymqjcwb0v6q0" path="res://Sounds/Click3.mp3" id="8_scjj0"]
+[ext_resource type="AudioStream" uid="uid://c1wct7qxgmhsf" path="res://Sounds/Click.mp3" id="9_xaycs"]
+[ext_resource type="PackedScene" uid="uid://bee1mhs3a22ky" path="res://menu_music.tscn" id="10_5pspd"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4oc5a"]
+render_priority = 0
+shader = ExtResource("4_mli4t")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_p1rrv"]
+random_pitch = 1.18
+streams_count = 3
+stream_0/stream = ExtResource("7_oalsb")
+stream_1/stream = ExtResource("8_scjj0")
+stream_2/stream = ExtResource("9_xaycs")
+
+[sub_resource type="Environment" id="Environment_nncyf"]
+background_mode = 3
+glow_enabled = true
+glow_strength = 0.84
+glow_blend_mode = 1
+glow_hdr_scale = 2.44
+
+[sub_resource type="GDScript" id="GDScript_1ot0h"]
+script/source = "extends Label
+
+func _ready() -> void:
+	# Display the high score from the Global singleton
+	text = \"High Score: %d\" % Global.high_score
+"
+
+[node name="TitleScreen" type="Node2D"]
+script = ExtResource("1_vkuvb")
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+visible = false
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+offset_right = 1152.0
+offset_bottom = 653.0
+stream = ExtResource("2_ivxa3")
+autoplay = true
+expand = true
+loop = true
+
+[node name="Start" type="Button" parent="."]
+modulate = Color(1, 1, 2, 1)
+material = SubResource("ShaderMaterial_4oc5a")
+offset_left = 395.0
+offset_top = 274.0
+offset_right = 710.0
+offset_bottom = 424.0
+theme_override_colors/font_color = Color(0.983007, 0.993056, 1, 1)
+theme_override_colors/font_outline_color = Color(0.349, 0.267, 1, 0.833)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("3_116nx")
+theme_override_font_sizes/font_size = 48
+text = "Start Game"
+flat = true
+
+[node name="Options" type="Button" parent="."]
+modulate = Color(1, 1, 2, 1)
+material = SubResource("ShaderMaterial_4oc5a")
+offset_left = 391.0
+offset_top = 376.0
+offset_right = 706.0
+offset_bottom = 526.0
+theme_override_colors/font_color = Color(0.983007, 0.993056, 1, 1)
+theme_override_colors/font_outline_color = Color(0.349, 0.267, 1, 0.833)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("3_116nx")
+theme_override_font_sizes/font_size = 48
+text = "Options"
+flat = true
+
+[node name="Quit" type="Button" parent="."]
+modulate = Color(1, 1, 2, 1)
+material = SubResource("ShaderMaterial_4oc5a")
+offset_left = 393.0
+offset_top = 490.0
+offset_right = 708.0
+offset_bottom = 640.0
+theme_override_colors/font_color = Color(0.983007, 0.993056, 1, 1)
+theme_override_colors/font_outline_color = Color(0.349, 0.267, 1, 0.833)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("3_116nx")
+theme_override_font_sizes/font_size = 48
+text = "Quit Game"
+flat = true
+
+[node name="Fade_transition" parent="." instance=ExtResource("3_tn51j")]
+visible = false
+
+[node name="Fade_timer" type="Timer" parent="Fade_transition"]
+
+[node name="Controls" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 5.0
+offset_top = 3.0
+offset_right = 432.0
+offset_bottom = 644.0
+
+[node name="TextureRect" type="TextureRect" parent="Controls"]
+modulate = Color(0.647059, 0.643137, 0.968627, 0.862745)
+layout_mode = 0
+offset_left = 94.0
+offset_top = 470.0
+offset_right = 374.0
+offset_bottom = 644.0
+texture = ExtResource("5_rog2a")
+expand_mode = 1
+
+[node name="Click" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(542, 427)
+stream = SubResource("AudioStreamRandomizer_p1rrv")
+volume_db = -2.405
+pitch_scale = 0.86
+bus = &"SFX"
+
+[node name="QuitTimer" type="Timer" parent="."]
+wait_time = 0.198
+
+[node name="MenuMusic" parent="." instance=ExtResource("10_5pspd")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_nncyf")
+
+[node name="HighScoreLabel" type="Label" parent="."]
+offset_left = 19.0
+offset_right = 130.0
+offset_bottom = 41.0
+theme_override_colors/font_color = Color(0.876698, 0.91246, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.266667, 0.454902, 0.92549, 1)
+theme_override_font_sizes/font_size = 23
+text = "Highscore"
+script = SubResource("GDScript_1ot0h")
+
+[connection signal="pressed" from="Start" to="." method="_on_play_pressed"]
+[connection signal="pressed" from="Options" to="." method="_on_options_pressed"]
+[connection signal="pressed" from="Quit" to="." method="_on_quit_pressed"]
+[connection signal="timeout" from="Fade_transition/Fade_timer" to="." method="_on_fade_timer_timeout"]
+[connection signal="timeout" from="QuitTimer" to="." method="_on_quit_timer_timeout"]

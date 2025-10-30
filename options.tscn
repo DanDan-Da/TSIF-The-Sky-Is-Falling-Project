@@ -1,0 +1,126 @@
+[gd_scene load_steps=15 format=3 uid="uid://tfubxat7hbi5"]
+
+[ext_resource type="Script" path="res://options.gd" id="1_rylvu"]
+[ext_resource type="VideoStream" path="res://Start screen.ogv" id="2_0jhy6"]
+[ext_resource type="AudioStream" uid="uid://bhvkx2djrjhh8" path="res://Sounds/Audio.mp3" id="2_mk6ns"]
+[ext_resource type="FontFile" uid="uid://bcqp6l8lhkukb" path="res://MainMenu/InfoFontEnglish.ttf" id="3_2c8ge"]
+[ext_resource type="AudioStream" uid="uid://bwcvg8f8quigd" path="res://Sounds/Hurt1.mp3" id="3_at47d"]
+[ext_resource type="AudioStream" uid="uid://cxi2cpribak3y" path="res://Sounds/Hurt2.mp3" id="4_8py63"]
+[ext_resource type="AudioStream" uid="uid://wuw42rvdbynx" path="res://Sounds/Hurt3.mp3" id="5_ix3eg"]
+[ext_resource type="Shader" path="res://title_screen.gdshader" id="8_uduba"]
+[ext_resource type="AudioStream" uid="uid://u1fpyr7vkl1d" path="res://Sounds/Click2.mp3" id="9_c4w83"]
+[ext_resource type="AudioStream" uid="uid://ymqjcwb0v6q0" path="res://Sounds/Click3.mp3" id="10_p1mwd"]
+[ext_resource type="AudioStream" uid="uid://c1wct7qxgmhsf" path="res://Sounds/Click.mp3" id="11_ikdpd"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_o0ib1"]
+render_priority = 0
+shader = ExtResource("8_uduba")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_oo24o"]
+random_pitch = 1.18
+streams_count = 3
+stream_0/stream = ExtResource("9_c4w83")
+stream_1/stream = ExtResource("10_p1mwd")
+stream_2/stream = ExtResource("11_ikdpd")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_omwgl"]
+streams_count = 3
+stream_0/stream = ExtResource("3_at47d")
+stream_1/stream = ExtResource("4_8py63")
+stream_2/stream = ExtResource("5_ix3eg")
+
+[node name="Options" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rylvu")
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 653.0
+stream = ExtResource("2_0jhy6")
+autoplay = true
+expand = true
+loop = true
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 297.0
+offset_top = 282.0
+offset_right = 832.0
+offset_bottom = 570.0
+
+[node name="Master Volume" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_2c8ge")
+theme_override_font_sizes/font_size = 30
+text = "Master Volume"
+horizontal_alignment = 1
+
+[node name="MasterVSlider" type="HSlider" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+step = 5.0
+
+[node name="Music Volume" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_2c8ge")
+theme_override_font_sizes/font_size = 30
+text = "Music Volume"
+horizontal_alignment = 1
+
+[node name="MusicVSlider" type="HSlider" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+step = 5.0
+
+[node name="SE Volume" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_2c8ge")
+theme_override_font_sizes/font_size = 30
+text = "Sound Effect Volume"
+horizontal_alignment = 1
+
+[node name="SFXVSlider" type="HSlider" parent="VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+step = 5.0
+
+[node name="MenuMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_mk6ns")
+volume_db = 10.27
+autoplay = true
+bus = &"Music"
+
+[node name="TitleScreen" type="Button" parent="."]
+modulate = Color(1, 1, 2, 1)
+material = SubResource("ShaderMaterial_o0ib1")
+layout_mode = 0
+offset_left = 394.0
+offset_top = 559.0
+offset_right = 709.0
+offset_bottom = 642.0
+theme_override_colors/font_color = Color(1, 0.446302, 0.431782, 1)
+theme_override_colors/font_outline_color = Color(0.52599, 0.00374833, 2.88785e-07, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("3_2c8ge")
+theme_override_font_sizes/font_size = 40
+text = "Back to Title"
+flat = true
+
+[node name="Click" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(542, 427)
+stream = SubResource("AudioStreamRandomizer_oo24o")
+volume_db = -2.405
+pitch_scale = 0.86
+bus = &"SFX"
+
+[node name="SoundTest" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource("AudioStreamRandomizer_omwgl")
+bus = &"SFX"
+
+[connection signal="pressed" from="TitleScreen" to="." method="_on_title_screen_pressed"]

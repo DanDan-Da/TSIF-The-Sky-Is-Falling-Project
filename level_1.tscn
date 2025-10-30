@@ -1,0 +1,173 @@
+[gd_scene load_steps=23 format=3 uid="uid://osnabbbsa74n"]
+
+[ext_resource type="Script" path="res://level_1.gd" id="1_3om3o"]
+[ext_resource type="PackedScene" uid="uid://c1vgtr6waxedg" path="res://block.tscn" id="1_r01fo"]
+[ext_resource type="ArrayMesh" uid="uid://ts8irc4rjgh" path="res://3D models/StoneTower.res" id="2_gi2ax"]
+[ext_resource type="PackedScene" uid="uid://qpwid257x8d5" path="res://Player.tscn" id="2_hgtvx"]
+[ext_resource type="Script" path="res://objects.gd" id="3_7wy1g"]
+[ext_resource type="PackedScene" uid="uid://bwe3osgqx8mgs" path="res://Snowball.tscn" id="3_klddj"]
+[ext_resource type="PackedScene" uid="uid://dq0c17slx41xu" path="res://Cloud.tscn" id="7_8fjq2"]
+[ext_resource type="PackedScene" uid="uid://dela4jf4kwxwp" path="res://coin_rigid.tscn" id="7_h0jqf"]
+[ext_resource type="Script" path="res://coin_spawner.gd" id="7_s1oo2"]
+[ext_resource type="Texture2D" uid="uid://chqbhiiga7yt4" path="res://PNGs/4k blender custom.exr" id="8_ckv31"]
+[ext_resource type="PackedScene" uid="uid://dj3nen1ghgff4" path="res://fade_transition.tscn" id="8_yd3jk"]
+[ext_resource type="PackedScene" uid="uid://bu01nb4hfnr4d" path="res://pause_menu.tscn" id="11_aspse"]
+[ext_resource type="FontFile" uid="uid://bcqp6l8lhkukb" path="res://MainMenu/InfoFontEnglish.ttf" id="11_ysr0g"]
+[ext_resource type="Script" path="res://camera_3d.gd" id="12_7ehml"]
+[ext_resource type="AudioStream" uid="uid://bxs77q7tsdqr0" path="res://Sounds/Tsif marimba.mp3" id="12_gae7c"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_8ktwu"]
+size = Vector3(10, 0.5, 10)
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_gv4o1"]
+panorama = ExtResource("8_ckv31")
+
+[sub_resource type="Sky" id="Sky_uc7ia"]
+sky_material = SubResource("PanoramaSkyMaterial_gv4o1")
+
+[sub_resource type="Environment" id="Environment_6fwil"]
+background_mode = 2
+sky = SubResource("Sky_uc7ia")
+sky_rotation = Vector3(-0.42586, 0, 0)
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_fehcx"]
+
+[sub_resource type="Theme" id="Theme_os421"]
+default_base_scale = 0.08
+default_font = ExtResource("11_ysr0g")
+default_font_size = 28
+
+[sub_resource type="GDScript" id="GDScript_waqsy"]
+resource_name = "ScoreScript"
+script/source = "extends Label
+
+var score = 0
+
+func _ready() -> void:
+	update_score()
+
+# Increment the score and update the label
+func add_score(amount: int) -> void:
+	score += amount
+	update_score()
+
+# Update the label text to reflect the current score
+func update_score() -> void:
+	text = \"Score: %d\" % score
+
+# Increment score on timer timeout
+func _on_score_timer_timeout() -> void:
+	score += 1
+	update_score()
+"
+
+[node name="Level1" type="Node3D"]
+script = ExtResource("1_3om3o")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-4.37114e-08, -1, 0, 0.115856, -5.06422e-09, 0.993266, -0.993266, 4.3417e-08, 0.115856, 0, 54.5831, 0)
+shadow_enabled = true
+
+[node name="Floor" type="StaticBody3D" parent="."]
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("BoxShape3D_8ktwu")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+transform = Transform3D(5.7822, 0, 0, 0, 5.7822, 0, 0, 0, 5.7822, 0, 0.25299, 0)
+mesh = ExtResource("2_gi2ax")
+
+[node name="Objects" type="Node3D" parent="."]
+script = ExtResource("3_7wy1g")
+
+[node name="Block" parent="Objects" instance=ExtResource("1_r01fo")]
+transform = Transform3D(0.872304, 0.503625, 0, -0.503461, 0.87202, -0.0257165, -0.0128583, 0.0222711, 1.00692, -1.85749, -8.11616, -6.99767)
+
+[node name="Cloud" parent="Objects" instance=ExtResource("7_8fjq2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.94349, -7.42852)
+
+[node name="SnowBall" parent="Objects" instance=ExtResource("3_klddj")]
+transform = Transform3D(0.997692, 0, 0, 0, 0.997692, 0, 0, 0, 0.997692, 0, -3.98393, -7.01915)
+
+[node name="FreezeTimer" type="Timer" parent="Objects"]
+wait_time = 5.0
+autostart = true
+
+[node name="HeightTimer" type="Timer" parent="Objects"]
+wait_time = 30.0
+autostart = true
+
+[node name="CoinSpawner" type="Node3D" parent="."]
+script = ExtResource("7_s1oo2")
+
+[node name="CoinRigid" parent="CoinSpawner" instance=ExtResource("7_h0jqf")]
+transform = Transform3D(1, 0, 0, 0, 0.977761, -0.209721, 0, 0.209721, 0.977761, 0, -4.77439, -7.04467)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_6fwil")
+
+[node name="Fade_transition" parent="." instance=ExtResource("8_yd3jk")]
+
+[node name="WorldBoarder" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 3.1968, 0, 0, 0, 1, 0, 0, 0)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WorldBoarder"]
+transform = Transform3D(11, 0, 0, 0, 25, 0, 0, 0, 1, 0, 12.5, 5.5)
+shape = SubResource("BoxShape3D_fehcx")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="WorldBoarder"]
+transform = Transform3D(11, 0, 0, 0, 25, 0, 0, 0, 1, 0, 12.5, -5.5)
+shape = SubResource("BoxShape3D_fehcx")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="WorldBoarder"]
+transform = Transform3D(-4.80825e-07, 0, 1, 0, 25, 0, -11, 0, -4.37114e-08, 5.5, 12.5, 0)
+shape = SubResource("BoxShape3D_fehcx")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="WorldBoarder"]
+transform = Transform3D(-4.80825e-07, 0, 1, 0, 25, 0, -11, 0, -4.37114e-08, -5.5, 12.5, 0)
+shape = SubResource("BoxShape3D_fehcx")
+
+[node name="Player" parent="." instance=ExtResource("2_hgtvx")]
+transform = Transform3D(1.0356, 0, 0, 0, 1.0356, 0, 0, 0, 1.0356, 0.0664287, 1.70232, -0.533498)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.882152, 0.470966, 0, -0.470966, 0.882152, 0, 7.4619, 9.62556)
+script = ExtResource("12_7ehml")
+
+[node name="ScoreLabel" type="Label" parent="Camera3D"]
+offset_left = 1002.0
+offset_right = 1176.0
+offset_bottom = 62.0
+theme = SubResource("Theme_os421")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+text = "Score: 0"
+script = SubResource("GDScript_waqsy")
+
+[node name="ScoreTimer" type="Timer" parent="Camera3D/ScoreLabel"]
+wait_time = 0.5
+autostart = true
+
+[node name="MoveTimer" type="Timer" parent="Camera3D"]
+wait_time = 45.0
+one_shot = true
+autostart = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="PauseMenu" parent="CanvasLayer" instance=ExtResource("11_aspse")]
+
+[node name="Song" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("12_gae7c")
+volume_db = -9.398
+pitch_scale = 0.9
+autoplay = true
+bus = &"Music"
+
+[connection signal="timeout" from="Objects/FreezeTimer" to="Objects" method="_on_freeze_timer_timeout"]
+[connection signal="timeout" from="Objects/HeightTimer" to="Objects" method="_on_height_timer_timeout"]
+[connection signal="timeout" from="Camera3D/ScoreLabel/ScoreTimer" to="Camera3D/ScoreLabel" method="_on_score_timer_timeout"]
+[connection signal="timeout" from="Camera3D/MoveTimer" to="Camera3D" method="_on_move_timer_timeout"]

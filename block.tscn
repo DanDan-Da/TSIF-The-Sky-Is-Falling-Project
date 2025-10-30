@@ -1,0 +1,62 @@
+[gd_scene load_steps=10 format=3 uid="uid://c1vgtr6waxedg"]
+
+[ext_resource type="Script" path="res://block.gd" id="1_c5npe"]
+[ext_resource type="ArrayMesh" uid="uid://bfnoenw0n1l37" path="res://3D models/Cube2.0.res" id="2_aexbl"]
+[ext_resource type="AudioStream" uid="uid://bkn08jnbomavq" path="res://Sounds/Stone1.mp3" id="3_0tvdf"]
+[ext_resource type="AudioStream" uid="uid://6vdn6mnuuos1" path="res://Sounds/Stone2.mp3" id="4_ch03a"]
+[ext_resource type="AudioStream" uid="uid://bkowwjwsxgdxq" path="res://Sounds/Stone3.mp3" id="5_ddh6n"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kgcpb"]
+
+[sub_resource type="GDScript" id="GDScript_up8rk"]
+script/source = "extends Area3D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	global_rotation = Vector3(0,1,0)
+"
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_4lbex"]
+height = 0.904261
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_q0opm"]
+streams_count = 3
+stream_0/stream = ExtResource("3_0tvdf")
+stream_1/stream = ExtResource("4_ch03a")
+stream_2/stream = ExtResource("5_ddh6n")
+
+[node name="Block" type="RigidBody3D"]
+mass = 2.25
+gravity_scale = 2.0
+script = ExtResource("1_c5npe")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.65, 0, 0, 0, 0.65, 0, 0, 0, 0.65, 0, 0, 0)
+mesh = ExtResource("2_aexbl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1.31969, 0, 0, 0, 1.31969, 0, 0, 0, 1.31969, 0, 0, 0)
+shape = SubResource("BoxShape3D_kgcpb")
+
+[node name="HurtBox" type="Area3D" parent="."]
+script = SubResource("GDScript_up8rk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtBox"]
+transform = Transform3D(1.12018, 0, 0, 0, 1.12018, 0, 0, 0, 1.12018, 0, -0.241844, 0)
+shape = SubResource("CylinderShape3D_4lbex")
+
+[node name="Stone" type="AudioStreamPlayer3D" parent="."]
+stream = SubResource("AudioStreamRandomizer_q0opm")
+pitch_scale = 0.54
+bus = &"SFX"
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_entered" from="HurtBox" to="." method="_on_hurt_box_body_entered"]
+[connection signal="body_exited" from="HurtBox" to="." method="_on_hurt_box_body_exited"]
+[connection signal="property_list_changed" from="HurtBox" to="." method="_on_hurt_box_property_list_changed"]

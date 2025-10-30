@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3 uid="uid://dq0c17slx41xu"]
+
+[ext_resource type="Script" path="res://cloud.gd" id="1_hvgo3"]
+[ext_resource type="ArrayMesh" uid="uid://dtiwcf01ikvep" path="res://3D models/CloudNew.res" id="2_yqqb5"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_ipgrv"]
+height = 1.16986
+radius = 0.533313
+
+[sub_resource type="GDScript" id="GDScript_mguma"]
+script/source = "extends Area3D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	global_rotation = Vector3.ZERO
+"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ettuc"]
+size = Vector3(1, 0.84906, 1)
+
+[node name="Cloud" type="RigidBody3D"]
+mass = 0.75
+gravity_scale = 0.75
+script = ExtResource("1_hvgo3")
+
+[node name="Sphere_001" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.7, 0, 0, 0, 0.7, 0, 0, 0, 0.7, 0, 0, 0)
+mesh = ExtResource("2_yqqb5")
+skeleton = NodePath("")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1.25899, 0, 0, 0, -5.50321e-08, -1.25899, 0, 1.25899, -5.50321e-08, 0, 0, 0)
+shape = SubResource("CylinderShape3D_ipgrv")
+
+[node name="HurtBox" type="Area3D" parent="."]
+script = SubResource("GDScript_mguma")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtBox"]
+transform = Transform3D(0.890465, 0, 0, 0, 0.890465, 0, 0, 0, 0.890465, 0, -0.353497, 0)
+shape = SubResource("BoxShape3D_ettuc")
+
+[connection signal="body_entered" from="HurtBox" to="." method="_on_hurt_box_body_entered"]
+[connection signal="body_exited" from="HurtBox" to="." method="_on_hurt_box_body_exited"]

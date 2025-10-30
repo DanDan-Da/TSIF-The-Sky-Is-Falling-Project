@@ -1,0 +1,42 @@
+[gd_scene load_steps=6 format=3 uid="uid://bwe3osgqx8mgs"]
+
+[ext_resource type="ArrayMesh" uid="uid://ceste0gw6bwvx" path="res://3D models/Snowball.res" id="1_s4bot"]
+[ext_resource type="Script" path="res://Snowball.gd" id="1_v06ft"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_hq8vj"]
+
+[sub_resource type="GDScript" id="GDScript_j5tkr"]
+script/source = "extends Area3D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	global_rotation = Vector3.ZERO
+"
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_n0nn7"]
+
+[node name="Snowball" type="RigidBody3D"]
+script = ExtResource("1_v06ft")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.371036, 0, 0, 0, 0.371036, 0, 0, 0, 0.371036, 0, 0, 0)
+mesh = ExtResource("1_s4bot")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_hq8vj")
+
+[node name="HurtBox" type="Area3D" parent="."]
+script = SubResource("GDScript_j5tkr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtBox"]
+transform = Transform3D(0.831037, 0, 0, 0, 0.831037, 0, 0, 0, 0.831037, 0, -0.159656, 0)
+shape = SubResource("SphereShape3D_n0nn7")
+
+[connection signal="body_entered" from="HurtBox" to="." method="_on_hurt_box_body_entered"]
+[connection signal="body_exited" from="HurtBox" to="." method="_on_hurt_box_body_exited"]

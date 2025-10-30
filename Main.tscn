@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://qpwid257x8d5"]
+
+[ext_resource type="Script" path="res://character_body_3d.gd" id="1_bu1sq"]
+[ext_resource type="Texture2D" uid="uid://sqec5k33asod" path="res://icon.svg" id="2_6yf7u"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Player" type="CharacterBody3D" parent="."]
+script = ExtResource("1_bu1sq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+
+[node name="Sprite3D" type="Sprite3D" parent="Player"]
+texture = ExtResource("2_6yf7u")

@@ -1,0 +1,52 @@
+[gd_scene load_steps=9 format=3 uid="uid://b1u1oajpm33ry"]
+
+[ext_resource type="Script" path="res://info.gd" id="1_qx6ey"]
+[ext_resource type="VideoStream" path="res://pop up_1.ogv" id="1_vey6n"]
+[ext_resource type="Texture2D" uid="uid://civu14qnjmc3s" path="res://PNGs/SpaceToSkip.png" id="2_aqaqi"]
+[ext_resource type="PackedScene" uid="uid://dj3nen1ghgff4" path="res://fade_transition.tscn" id="3_j8iv6"]
+[ext_resource type="AudioStream" uid="uid://u1fpyr7vkl1d" path="res://Sounds/Click2.mp3" id="5_lk4sj"]
+[ext_resource type="AudioStream" uid="uid://ymqjcwb0v6q0" path="res://Sounds/Click3.mp3" id="6_2gvto"]
+[ext_resource type="AudioStream" uid="uid://c1wct7qxgmhsf" path="res://Sounds/Click.mp3" id="7_dpmlt"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_cp70n"]
+random_pitch = 1.18
+streams_count = 3
+stream_0/stream = ExtResource("5_lk4sj")
+stream_1/stream = ExtResource("6_2gvto")
+stream_2/stream = ExtResource("7_dpmlt")
+
+[node name="Info" type="Node2D"]
+script = ExtResource("1_qx6ey")
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+offset_right = 1151.0
+offset_bottom = 653.0
+stream = ExtResource("1_vey6n")
+autoplay = true
+expand = true
+
+[node name="TextureRect" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0.768627)
+self_modulate = Color(0.980392, 1, 1, 0.878431)
+offset_left = 953.0
+offset_top = 587.0
+offset_right = 1193.0
+offset_bottom = 637.0
+texture = ExtResource("2_aqaqi")
+expand_mode = 1
+
+[node name="Fade_transition" parent="." instance=ExtResource("3_j8iv6")]
+visible = false
+
+[node name="Fade_timer" type="Timer" parent="Fade_transition"]
+autostart = true
+
+[node name="Click" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(542, 427)
+stream = SubResource("AudioStreamRandomizer_cp70n")
+volume_db = -2.405
+pitch_scale = 0.86
+bus = &"SFX"
+
+[connection signal="finished" from="VideoStreamPlayer" to="." method="_on_video_stream_player_finished"]
+[connection signal="timeout" from="Fade_transition/Fade_timer" to="." method="_on_fade_timer_timeout"]

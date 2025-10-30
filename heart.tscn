@@ -1,0 +1,20 @@
+[gd_scene load_steps=3 format=3 uid="uid://dxk1213wvsm8s"]
+
+[ext_resource type="Texture2D" uid="uid://hlq2qgjarx6j" path="res://heart-sprite-full-health.png" id="1_8sy8p"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hlqg3"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_8sy8p")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D"]
+position = Vector2(8, 8)
+sprite_frames = SubResource("SpriteFrames_hlqg3")
+animation = &"idle"
+autoplay = "idle"

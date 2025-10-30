@@ -1,0 +1,165 @@
+[gd_scene load_steps=16 format=3 uid="uid://bwl2iq7leyw7r"]
+
+[ext_resource type="VideoStream" path="res://DeathScreen.ogv" id="1_0i2ik"]
+[ext_resource type="Script" path="res://game_over.gd" id="1_sr26u"]
+[ext_resource type="Shader" path="res://title_screen.gdshader" id="3_ykg5r"]
+[ext_resource type="FontFile" uid="uid://bcqp6l8lhkukb" path="res://MainMenu/InfoFontEnglish.ttf" id="4_4d75n"]
+[ext_resource type="AudioStream" uid="uid://u1fpyr7vkl1d" path="res://Sounds/Click2.mp3" id="5_fw0rm"]
+[ext_resource type="AudioStream" uid="uid://ymqjcwb0v6q0" path="res://Sounds/Click3.mp3" id="6_atenu"]
+[ext_resource type="AudioStream" uid="uid://c1wct7qxgmhsf" path="res://Sounds/Click.mp3" id="7_55yqm"]
+[ext_resource type="PackedScene" uid="uid://dj3nen1ghgff4" path="res://fade_transition.tscn" id="8_72ray"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sp4ng"]
+render_priority = 0
+shader = ExtResource("3_ykg5r")
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_hvpem"]
+random_pitch = 1.18
+streams_count = 3
+stream_0/stream = ExtResource("5_fw0rm")
+stream_1/stream = ExtResource("6_atenu")
+stream_2/stream = ExtResource("7_55yqm")
+
+[sub_resource type="Gradient" id="Gradient_elhl4"]
+offsets = PackedFloat32Array(0, 0.402214, 0.98524, 0.98893)
+colors = PackedColorArray(0, 0, 0, 1, 0.35206, 0.0869795, 0.0441801, 1, 1, 0.247059, 0.12549, 1, 0.97417, 0.97417, 0.97417, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_ondw1"]
+gradient = SubResource("Gradient_elhl4")
+
+[sub_resource type="Environment" id="Environment_cdxyk"]
+background_mode = 3
+background_color = Color(1, 0.151344, 0.108333, 1)
+background_energy_multiplier = 1.29
+sky_custom_fov = 76.2
+ambient_light_color = Color(0.461868, 0, 0, 1)
+tonemap_exposure = 1.49
+glow_enabled = true
+glow_intensity = 1.24
+glow_strength = 0.85
+glow_blend_mode = 1
+glow_hdr_scale = 2.44
+glow_map = SubResource("GradientTexture1D_ondw1")
+fog_enabled = true
+fog_light_color = Color(0.709804, 0, 0.00392157, 1)
+
+[sub_resource type="GDScript" id="GDScript_pujp3"]
+script/source = "extends Label
+
+func _ready() -> void:
+	# Display the last score from the Global singleton
+	text = \"Your Score: %d\" % Global.last_score
+"
+
+[sub_resource type="GDScript" id="GDScript_i2k57"]
+script/source = "extends Label
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	# Display the high score from the Global singleton
+	text = \"High Score: %d\" % Global.high_score
+"
+
+[node name="GameOver" type="Node2D"]
+script = ExtResource("1_sr26u")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(576, 324)
+
+[node name="VideoStreamPlayer2" type="VideoStreamPlayer" parent="."]
+modulate = Color(0.854902, 0.313726, 0.313726, 1)
+self_modulate = Color(1, 0.698039, 1, 1)
+offset_right = 1152.0
+offset_bottom = 653.0
+stream = ExtResource("1_0i2ik")
+autoplay = true
+expand = true
+loop = true
+
+[node name="TryAgain" type="Button" parent="."]
+modulate = Color(1, 1, 2, 1)
+material = SubResource("ShaderMaterial_sp4ng")
+offset_left = 394.0
+offset_top = 327.0
+offset_right = 709.0
+offset_bottom = 477.0
+theme_override_colors/font_color = Color(0.454902, 0.00784314, 0, 1)
+theme_override_colors/font_outline_color = Color(0.27451, 0, 0.0745098, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("4_4d75n")
+theme_override_font_sizes/font_size = 40
+text = "Try Again"
+flat = true
+
+[node name="TitleScreen" type="Button" parent="."]
+modulate = Color(1, 1, 2, 1)
+material = SubResource("ShaderMaterial_sp4ng")
+offset_left = 394.0
+offset_top = 434.0
+offset_right = 709.0
+offset_bottom = 584.0
+theme_override_colors/font_color = Color(0.454902, 0.00784314, 0, 1)
+theme_override_colors/font_outline_color = Color(0.27451, 0, 0.0745098, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("4_4d75n")
+theme_override_font_sizes/font_size = 40
+text = "Title Screen"
+flat = true
+
+[node name="Quit" type="Button" parent="."]
+modulate = Color(1, 1, 2, 1)
+material = SubResource("ShaderMaterial_sp4ng")
+offset_left = 394.0
+offset_top = 530.0
+offset_right = 709.0
+offset_bottom = 680.0
+theme_override_colors/font_color = Color(0.454902, 0.00784314, 0, 1)
+theme_override_colors/font_outline_color = Color(0.27451, 0, 0.0745098, 1)
+theme_override_constants/outline_size = 3
+theme_override_fonts/font = ExtResource("4_4d75n")
+theme_override_font_sizes/font_size = 40
+text = "Quit"
+flat = true
+
+[node name="Click" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(542, 427)
+stream = SubResource("AudioStreamRandomizer_hvpem")
+volume_db = -2.405
+pitch_scale = 1.08
+bus = &"SFX"
+
+[node name="Fade_transition" parent="." instance=ExtResource("8_72ray")]
+visible = false
+
+[node name="Fade_timer" type="Timer" parent="Fade_transition"]
+wait_time = 0.654
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_cdxyk")
+
+[node name="LastScoreLabel" type="Label" parent="."]
+offset_left = 18.0
+offset_top = 38.0
+offset_right = 130.0
+offset_bottom = 79.0
+theme_override_colors/font_color = Color(0.568689, 0.000922606, 0.18641, 1)
+theme_override_colors/font_shadow_color = Color(0.454902, 0.00784314, 0, 1)
+theme_override_font_sizes/font_size = 23
+text = "LastScore"
+script = SubResource("GDScript_pujp3")
+
+[node name="HighScoreLabel" type="Label" parent="."]
+offset_left = 17.0
+offset_top = -1.0
+offset_right = 129.0
+offset_bottom = 40.0
+theme_override_colors/font_color = Color(0.568689, 0.000922606, 0.18641, 1)
+theme_override_colors/font_shadow_color = Color(0.454902, 0.00784314, 0, 1)
+theme_override_font_sizes/font_size = 23
+text = "HighScore"
+script = SubResource("GDScript_i2k57")
+
+[connection signal="pressed" from="TryAgain" to="." method="_on_try_again_pressed"]
+[connection signal="pressed" from="TitleScreen" to="." method="_on_title_screen_pressed"]
+[connection signal="pressed" from="Quit" to="." method="_on_quit_pressed"]
+[connection signal="timeout" from="Fade_transition/Fade_timer" to="." method="_on_fade_timer_timeout"]

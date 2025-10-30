@@ -1,0 +1,33 @@
+[gd_scene load_steps=8 format=3 uid="uid://dduoi18ggiwdy"]
+
+[ext_resource type="Script" path="res://coin.gd" id="1_dxs8j"]
+[ext_resource type="ArrayMesh" uid="uid://chvssbwptjf7u" path="res://3D models/coin_new.res" id="2_7qq8k"]
+[ext_resource type="AudioStream" uid="uid://bgxk77acdpmjq" path="res://Sounds/COINCLING1.mp3" id="3_1lmgw"]
+[ext_resource type="AudioStream" uid="uid://dd0xwx23nthe0" path="res://Sounds/COINCLING2.mp3" id="4_ipbtf"]
+[ext_resource type="AudioStream" uid="uid://bkwgob1mmumtj" path="res://Sounds/COINCLING 3.mp3" id="5_x5yhp"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_wcmss"]
+height = 0.25
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_5p5c2"]
+streams_count = 3
+stream_0/stream = ExtResource("3_1lmgw")
+stream_1/stream = ExtResource("4_ipbtf")
+stream_2/stream = ExtResource("5_x5yhp")
+
+[node name="Coin" type="Area3D"]
+script = ExtResource("1_dxs8j")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(-4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0, 1, 0, 0, 0)
+shape = SubResource("CylinderShape3D_wcmss")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(-5.55204e-09, 1, -5.33991e-09, 0, -4.37114e-08, -0.122163, -0.127016, -4.37114e-08, 2.33415e-16, 0, -0.301407, -0.218486)
+mesh = ExtResource("2_7qq8k")
+
+[node name="CoinCling" type="AudioStreamPlayer3D" parent="."]
+stream = SubResource("AudioStreamRandomizer_5p5c2")
+bus = &"SFX"
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
